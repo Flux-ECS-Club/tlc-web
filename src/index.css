@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/*
+  =========================================
+  WORKSTREAM: Events / Contact / Newsletter
+  Author: Aarya (aarya-events branch)
+  =========================================
+  Global CSS variables for this workstream.
+  Colors, spacing and accent values are
+  intentionally not finalized — these vars
+  exist so the design team can update them
+  in one place once branding is decided.
+  =========================================
+*/
+
+:root {
+  /* Background layers */
+  --page-bg: #0a0a0a;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+
+  /* Borders */
+  --border: rgba(255, 255, 255, 0.08);
+  --border-hover: rgba(255, 255, 255, 0.18);
+
+  /* Text */
+  --text-primary: #f5f5f5;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  /* Accent — placeholder; update when branding is finalized */
+  --accent: #e5e7eb;
+  --accent-fg: #0a0a0a;
+
+  /* Category badge colors */
+  --badge-software-bg:   rgba(147, 197, 253, 0.12);
+  --badge-software-text: #93c5fd;
+  --badge-hardware-bg:   rgba(110, 231, 183, 0.12);
+  --badge-hardware-text: #6ee7b7;
+
+  /* Events page */
+  --events-bg:            var(--page-bg);
+  --events-card-bg:       var(--surface);
+  --events-card-border:   var(--border);
+
+  /* Contact page */
+  --contact-bg:           var(--page-bg);
+  --contact-card-bg:      var(--surface);
+  --contact-input-bg:     var(--surface-2);
+  --contact-input-border: var(--border);
+  --contact-input-focus:  #f5f5f5;
+
+  /* Newsletter page */
+  --newsletter-bg:        var(--page-bg);
+  --newsletter-card-bg:   var(--surface);
+}
