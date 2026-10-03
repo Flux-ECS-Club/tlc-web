@@ -13,17 +13,15 @@
  * Content is sourced from clubConfig.js and events.js — no fake data.
  */
 
-import { useRef, useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   motion,
-  useScroll,
-  useTransform,
-  useSpring,
   useInView,
 } from 'framer-motion'
 import { CLUB_CONFIG } from '../../config/clubConfig'
-import { getUpcomingEvents } from '../../data/events'
+import { getPastEvents, getUpcomingEvents } from '../../data/events'
+import Hero3D from '../../components/Hero3D/Hero3D'
 import './home.css'
 
 // ─── Animation Variants ────────────────────────────────────────
@@ -178,82 +176,156 @@ function CircuitBackground() {
 // ─── Hero Section ────────────────────────────────────────────────
 
 function HeroSection() {
-  const heroRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ['start start', 'end start'],
-  })
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-  const heroY = useTransform(scrollYProgress, [0, 0.8], [0, 80])
-
   return (
-    <motion.section
-      ref={heroRef}
-      className="home-hero"
-      style={{ opacity: heroOpacity, y: heroY }}
-    >
-      <div className="home-hero__glow" />
+    <section className="home-hero">
+      <div className="home-hero__layout">
+        <motion.div
+          className="home-hero__content"
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+        >
+          <motion.div variants={fadeUp} custom={0} className="home-hero__badge">
+            <span className="home-hero__badge-dot" />
+            {CLUB_CONFIG.institutionShort} · {CLUB_CONFIG.department}
+          </motion.div>
 
-      <motion.div
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
-      >
-        {/* Status badge */}
-        <motion.div variants={fadeUp} custom={0} className="home-hero__badge">
-          <span className="home-hero__badge-dot" />
-          {CLUB_CONFIG.institutionShort} · {CLUB_CONFIG.department}
+          <motion.h1 variants={fadeUp} custom={1} className="home-hero__title">
+            Learn by building.
+            <span className="home-hero__title-accent">Hardware meets software.</span>
+          </motion.h1>
+
+          <motion.p variants={fadeUp} custom={2} className="home-hero__dept">
+            TINKERER&apos;S LAB ECS · {CLUB_CONFIG.institutionShort}
+          </motion.p>
+
+          <motion.p variants={fadeUp} custom={3} className="home-hero__subtitle">
+            A hands-on learning space for {CLUB_CONFIG.institutionShort} students to explore electronics and software through practical workshops and technical sessions.
+          </motion.p>
+
+          <motion.div variants={fadeUp} custom={4} className="home-hero__actions">
+            <Link to="/events" className="home-hero__cta-primary">
+              Explore Events <ArrowRightIcon />
+            </Link>
+            <Link to="/newsletter" className="home-hero__cta-secondary">
+              <MailIcon /> Get Updates
+            </Link>
+          </motion.div>
         </motion.div>
 
-        {/* Main title */}
-        <motion.h1 variants={fadeUp} custom={1} className="home-hero__title">
-          Tinkerer's Lab
-          <span className="home-hero__title-accent">ECS</span>
-        </motion.h1>
-
-        {/* Department + Institution */}
-        <motion.p variants={fadeUp} custom={2} className="home-hero__dept">
-          {CLUB_CONFIG.department} · {CLUB_CONFIG.institutionShort}
-        </motion.p>
-
-        {/* Subtitle */}
-        <motion.p variants={fadeUp} custom={3} className="home-hero__subtitle">
-          Where hardware meets software. Hands-on workshops, maker sessions
-          and technical projects — built by students of {CLUB_CONFIG.institutionShort}.
-        </motion.p>
-
-        {/* CTA Buttons */}
-        <motion.div variants={fadeUp} custom={4} className="home-hero__actions">
-          <Link to="/events" className="home-hero__cta-primary">
-            Explore Events
-            <ArrowRightIcon />
-          </Link>
-          <Link to="/newsletter" className="home-hero__cta-secondary">
-            <MailIcon />
-            Subscribe
-          </Link>
+        <motion.div
+          className="home-hero__visual"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          aria-label="Interactive 3D circuit chip"
+        >
+          <Hero3D />
         </motion.div>
-      </motion.div>
-
-      {/* Scroll hint */}
-      <motion.div
-        className="home-hero__scroll-hint"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 0.6 }}
-      >
-        <span>Scroll</span>
-        <div className="home-hero__scroll-line" />
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   )
 }
 
-// ─── Focus Areas Section ─────────────────────────────────────────
+// ─── Quick Value Highlights ───────────────────────────────────────
+
+function HighlightsSection() {
+  const highlights = [
+    {
+      icon: <ChipIcon />,
+      title: 'Practical workshops',
+      description: 'Get hands-on with microcontrollers, sensors and PCB design.',
+      to: '/events',
+      action: 'See upcoming sessions',
+    },
+    {
+      icon: <CodeIcon />,
+      title: 'Hardware and software',
+      description: 'Explore two connected disciplines in one student lab.',
+      to: '#home-offerings',
+      action: 'Explore learning areas',
+    },
+    {
+      icon: <MailIcon />,
+      title: 'Stay in the loop',
+      description: 'Get club announcements and workshop updates in one place.',
+      to: '/newsletter',
+      action: 'Get updates',
+    },
+  ]
+
+  return (
+    <section className="home-highlights" aria-label="Lab highlights">
+      <div className="home-section__container home-highlight-grid">
+        {highlights.map((item, index) => (
+          <motion.article
+            className="home-highlight"
+            key={item.title}
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: '-40px' }}
+            custom={index}
+          >
+            <span className="home-highlight__icon" aria-hidden="true">{item.icon}</span>
+            <div>
+              <h2 className="home-highlight__title">{item.title}</h2>
+              <p className="home-highlight__description">{item.description}</p>
+              <Link className="home-highlight__link" to={item.to}>
+                {item.action} <ArrowRightIcon />
+              </Link>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
+// ─── Learning Areas ──────────────────────────────────────────────
 
 function FocusAreasSection() {
+  const [activeArea, setActiveArea] = useState('All')
+  const offerings = [
+    {
+      category: 'Hardware',
+      icon: <ChipIcon />,
+      iconClass: 'home-focus-card__icon--hardware',
+      title: 'Embedded systems',
+      description: 'Work with ESP32 boards, GPIO, UART and sensors, starting with the fundamentals.',
+      tags: ['ESP32', 'Sensors', 'Firmware'],
+    },
+    {
+      category: 'Hardware',
+      icon: <ChipIcon />,
+      iconClass: 'home-focus-card__icon--hardware',
+      title: 'PCB design',
+      description: 'Move from schematic capture through board layout and manufacturing files.',
+      tags: ['KiCad', 'PCB layout', 'Prototyping'],
+    },
+    {
+      category: 'Software',
+      icon: <CodeIcon />,
+      iconClass: 'home-focus-card__icon--software',
+      title: 'Web development',
+      description: 'Build with React and Vite while learning modern component-based development.',
+      tags: ['React', 'Vite', 'Web'],
+    },
+    {
+      category: 'Software',
+      icon: <CodeIcon />,
+      iconClass: 'home-focus-card__icon--software',
+      title: 'Collaborative coding',
+      description: 'Practice version control with branches, merges and team workflows in Git.',
+      tags: ['Git', 'Version control', 'Teamwork'],
+    },
+  ]
+  const visibleOfferings = activeArea === 'All'
+    ? offerings
+    : offerings.filter((offering) => offering.category === activeArea)
+
   return (
-    <section className="home-section">
+    <section className="home-section" id="home-offerings">
       <div className="home-section__container">
         <motion.div
           variants={staggerContainer}
@@ -262,67 +334,141 @@ function FocusAreasSection() {
           viewport={{ once: true, margin: '-80px' }}
         >
           <motion.p variants={fadeUp} className="home-section__label">
-            What We Do
+            Learning Areas
           </motion.p>
           <motion.h2 variants={fadeUp} className="home-section__title">
-            Two Disciplines, One Lab
+            From first circuit to working code
           </motion.h2>
           <motion.p variants={fadeUp} className="home-section__subtitle">
-            We bridge the gap between electronics and code — from PCB design and
-            microcontroller firmware to full-stack web applications and dev tooling.
+            Focused sessions introduce the tools and workflows behind practical electronics and software projects.
           </motion.p>
         </motion.div>
 
-        <div className="home-focus-grid">
-          {/* Hardware Card */}
-          <motion.div
-            className="home-focus-card"
-            variants={scaleIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          >
-            <div className="home-focus-card__icon home-focus-card__icon--hardware">
-              <ChipIcon />
-            </div>
-            <h3 className="home-focus-card__title">Hardware</h3>
-            <p className="home-focus-card__desc">
-              Microcontrollers, sensor integration, PCB layout and prototyping.
-              Learn to take a circuit from schematic to a manufactured board.
-            </p>
-            <div className="home-focus-card__tags">
-              <span className="home-focus-card__tag">ESP32</span>
-              <span className="home-focus-card__tag">KiCad</span>
-              <span className="home-focus-card__tag">IoT</span>
-              <span className="home-focus-card__tag">Sensors</span>
-            </div>
-          </motion.div>
+        <div className="home-offerings-toolbar">
+          <p className="home-offerings-toolbar__hint">Filter learning areas</p>
+          <div className="home-offerings-filter" role="group" aria-label="Filter learning areas">
+            {['All', 'Hardware', 'Software'].map((area) => (
+              <button
+                className={`home-offerings-filter__button ${activeArea === area ? 'home-offerings-filter__button--active' : ''}`}
+                key={area}
+                type="button"
+                aria-pressed={activeArea === area}
+                onClick={() => setActiveArea(area)}
+              >
+                {activeArea === area && (
+                  <motion.span
+                    className="home-offerings-filter__active-bg"
+                    layoutId="home-offerings-filter-active"
+                    transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="home-offerings-filter__label">{area}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-          {/* Software Card */}
-          <motion.div
-            className="home-focus-card"
-            variants={scaleIn}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-60px' }}
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          >
-            <div className="home-focus-card__icon home-focus-card__icon--software">
-              <CodeIcon />
+        <motion.div layout className="home-focus-grid">
+          {visibleOfferings.map((offering, index) => (
+              <motion.article
+                className="home-focus-card"
+                key={offering.title}
+                layout
+                initial={{ opacity: 0, y: 16, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ duration: 0.24, delay: index * 0.04 }}
+                whileHover={{ y: -4, transition: { duration: 0.18 } }}
+                whileTap={{ scale: 0.99 }}
+              >
+                <div className={`home-focus-card__icon ${offering.iconClass}`} aria-hidden="true">
+                  {offering.icon}
+                </div>
+                <h3 className="home-focus-card__title">{offering.title}</h3>
+                <p className="home-focus-card__desc">{offering.description}</p>
+                <div className="home-focus-card__tags">
+                  {offering.tags.map((tag) => (
+                    <span className="home-focus-card__tag" key={tag}>{tag}</span>
+                  ))}
+                </div>
+              </motion.article>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+// ─── What Makes the Lab Different ────────────────────────────────
+
+function DifferenceSection() {
+  const differences = [
+    ['Learn by doing', 'Work through practical activities instead of stopping at theory.'],
+    ['Connect disciplines', 'Explore how embedded hardware and software work together.'],
+    ['Start with the basics', 'Sessions like the ESP32 workshop are designed for beginners.'],
+    ['Use real workflows', 'Practice tools including KiCad, React, Vite and Git.'],
+    ['Keep learning together', 'Join focused workshops and stay connected between sessions.'],
+  ]
+
+  return (
+    <section className="home-section home-difference-section">
+      <div className="home-section__container home-difference-layout">
+        <div className="home-difference-intro">
+          <p className="home-section__label">Why the Lab</p>
+          <h2 className="home-section__title">Make learning tangible</h2>
+          <p className="home-section__subtitle">
+            A practical place to try tools, build confidence and connect ideas across ECS.
+          </p>
+        </div>
+        <div className="home-difference-list">
+          {differences.map(([title, description], index) => (
+            <motion.article
+              className="home-difference-item"
+              key={title}
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.4, delay: index * 0.06 }}
+            >
+              <span className="home-difference-item__number">0{index + 1}</span>
+              <div>
+                <h3 className="home-difference-item__title">{title}</h3>
+                <p className="home-difference-item__description">{description}</p>
+              </div>
+              <ArrowRightIcon />
+            </motion.article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ─── Tools and Categories ────────────────────────────────────────
+
+function CapabilitiesSection() {
+  const categories = [
+    { title: 'Hardware', skills: ['ESP32', 'Sensors', 'UART', 'KiCad', 'PCB design'] },
+    { title: 'Software', skills: ['React', 'Vite', 'Git', 'Version control'] },
+  ]
+
+  return (
+    <section className="home-section home-capabilities-section">
+      <div className="home-section__container home-capabilities-layout">
+        <div>
+          <p className="home-section__label">Tools and Topics</p>
+          <h2 className="home-section__title">Explore by interest</h2>
+        </div>
+        <div className="home-capabilities-groups">
+          {categories.map((category) => (
+            <div className="home-capability-group" key={category.title}>
+              <h3 className="home-capability-group__title">{category.title}</h3>
+              <div className="home-capability-group__tags">
+                {category.skills.map((skill) => (
+                  <span className="home-focus-card__tag" key={skill}>{skill}</span>
+                ))}
+              </div>
             </div>
-            <h3 className="home-focus-card__title">Software</h3>
-            <p className="home-focus-card__desc">
-              Web development, version control and collaborative coding.
-              Build real projects with modern tools and industry workflows.
-            </p>
-            <div className="home-focus-card__tags">
-              <span className="home-focus-card__tag">React</span>
-              <span className="home-focus-card__tag">Git</span>
-              <span className="home-focus-card__tag">Vite</span>
-              <span className="home-focus-card__tag">Open Source</span>
-            </div>
-          </motion.div>
+          ))}
         </div>
       </div>
     </section>
@@ -416,12 +562,12 @@ function EventsPreviewSection() {
 // ─── Stats / Highlights ──────────────────────────────────────────
 
 function StatsSection() {
-  // Only real, verifiable data from the actual events.js and project
+  const upcomingEvents = getUpcomingEvents()
+  const pastEvents = getPastEvents()
   const stats = [
-    { value: 4, suffix: '+', label: 'Workshops Conducted' },
-    { value: 2, suffix: '', label: 'Focus Areas' },
-    { value: 2, suffix: '', label: 'Upcoming Events' },
-    { value: 2026, suffix: '', label: 'Established' },
+    { value: upcomingEvents.length, suffix: '', label: 'Upcoming sessions' },
+    { value: pastEvents.length, suffix: '', label: 'Past events listed' },
+    { value: 2, suffix: '', label: 'Learning areas' },
   ]
 
   return (
@@ -434,8 +580,8 @@ function StatsSection() {
           whileInView="visible"
           viewport={{ once: true, margin: '-60px' }}
         >
-          {stats.map((stat, i) => (
-            <motion.div key={i} className="home-stat" variants={fadeUp}>
+          {stats.map((stat) => (
+            <motion.div key={stat.label} className="home-stat" variants={fadeUp}>
               <div className="home-stat__number">
                 <AnimatedCounter
                   target={stat.value}
@@ -455,16 +601,9 @@ function StatsSection() {
 // ─── Newsletter CTA ──────────────────────────────────────────────
 
 function NewsletterCTASection() {
-  const sectionRef = useRef(null)
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start end', 'end start'],
-  })
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [30, -30])
-
   return (
-    <section ref={sectionRef} className="home-section home-newsletter-section">
-      <motion.div className="home-section__container" style={{ y: parallaxY }}>
+    <section className="home-section home-newsletter-section">
+      <div className="home-section__container">
         <motion.div
           className="home-newsletter-card"
           variants={scaleIn}
@@ -473,17 +612,21 @@ function NewsletterCTASection() {
           viewport={{ once: true, margin: '-60px' }}
         >
           <div className="home-newsletter-card__glow" />
-          <h2 className="home-newsletter-card__title">Stay in the Loop</h2>
+          <p className="home-section__label">Your next step</p>
+          <h2 className="home-newsletter-card__title">Make your next idea real.</h2>
           <p className="home-newsletter-card__text">
-            Get notified about upcoming workshops, events and club updates.
-            No spam — just announcements that matter.
+            Find a workshop to join or get updates when the next session is announced.
           </p>
-          <Link to="/newsletter" className="home-newsletter-card__cta">
-            <MailIcon />
-            Subscribe to Newsletter
-          </Link>
+          <div className="home-newsletter-card__actions">
+            <Link to="/newsletter" className="home-newsletter-card__cta">
+              <MailIcon /> Get Workshop Updates
+            </Link>
+            <Link to="/contact" className="home-hero__cta-secondary">
+              Contact the Lab
+            </Link>
+          </div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   )
 }
@@ -496,10 +639,13 @@ export default function Home() {
       <CircuitBackground />
       <HeroSection />
       <hr className="home-divider" />
+      <HighlightsSection />
+      <StatsSection />
       <FocusAreasSection />
       <hr className="home-divider" />
+      <DifferenceSection />
+      <CapabilitiesSection />
       <EventsPreviewSection />
-      <StatsSection />
       <NewsletterCTASection />
     </div>
   )
