@@ -1,0 +1,6 @@
+{
+  "name": "Flux ECS Club - Autonomous Systems Guild",
+  "description": "Production platform for Flux Electronics & Computer Science Student Council: robotics, embedded systems, lab inventory telemetry, hardware requests, and technical events.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
