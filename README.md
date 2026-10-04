@@ -63,5 +63,3 @@ npm run preview
 - `src/`: Main source code containing React components, contexts, types, utility functions, and stylesheets.
 - `package.json`: Contains project metadata, npm scripts, and dependencies.
 - `vite.config.ts`: Configuration for the Vite bundler.
-
-

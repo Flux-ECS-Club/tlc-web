@@ -72,10 +72,18 @@ export const CouncilSection: React.FC<Props> = ({ onSelectMember, onViewAllMembe
                   </p>
                 </div>
                 <div className="flex items-center justify-center sm:justify-start gap-3 mt-3 pt-2 border-t border-[#2b2c37]/40 font-mono-code text-[11px] text-[#9ba0b4]">
-                  <span className="hover:text-[#ff5545] transition-colors">LinkedIn</span>
-                  <span>•</span>
-                  <span className="hover:text-[#ff5545] transition-colors">GitHub</span>
-                  <span>•</span>
+                  {president.linkedin && (
+                    <>
+                      <a href={president.linkedin} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="hover:text-[#ff5545] transition-colors">LinkedIn</a>
+                      <span>•</span>
+                    </>
+                  )}
+                  {president.github && (
+                    <>
+                      <a href={president.github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="hover:text-[#ff5545] transition-colors">GitHub</a>
+                      <span>•</span>
+                    </>
+                  )}
                   <span className="text-[#3fdeb7]">{president.tag}</span>
                 </div>
               </div>
@@ -112,10 +120,24 @@ export const CouncilSection: React.FC<Props> = ({ onSelectMember, onViewAllMembe
                   </p>
                 </div>
                 <div className="flex items-center justify-center sm:justify-start gap-3 mt-3 pt-2 border-t border-[#2b2c37]/40 font-mono-code text-[11px] text-[#9ba0b4]">
-                  <span className="hover:text-[#00eefc] transition-colors">LinkedIn</span>
-                  <span>•</span>
-                  <span className="hover:text-[#00eefc] transition-colors">IEEE Author</span>
-                  <span>•</span>
+                  {vp.linkedin && (
+                    <>
+                      <a href={vp.linkedin} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="hover:text-[#00eefc] transition-colors">LinkedIn</a>
+                      <span>•</span>
+                    </>
+                  )}
+                  {vp.github && (
+                    <>
+                      <a href={vp.github} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="hover:text-[#00eefc] transition-colors">GitHub</a>
+                      <span>•</span>
+                    </>
+                  )}
+                  {vp.publications && (
+                    <>
+                      <span className="hover:text-[#00eefc] transition-colors">IEEE Author</span>
+                      <span>•</span>
+                    </>
+                  )}
                   <span className="text-[#00eefc]">{vp.tag}</span>
                 </div>
               </div>
